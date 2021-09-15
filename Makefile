@@ -9,10 +9,11 @@ FFTW_LIB = /usr/local/lib
 
 ###### Compiler, tools and options
 
-TESTOPT = -g -ggdb
+#TESTOPT = -g -ggdb
+TESTOPT =
 
 C++	= g++
-CFLAGS	= -ansi -Wall -O3 -pedantic-errors -funroll-loops ${TESTOPT}
+CFLAGS	= -ansi -std=c++11 -Wall -O3 -pedantic-errors -funroll-loops ${TESTOPT}
 INCPATH = -I. -I${FFTW_INC}
 MY_DEFS =-DPT_VERBOSITY=20 -DPT_SAFETY=1 -DPDE_3D 
 
