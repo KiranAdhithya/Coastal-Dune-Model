@@ -47,7 +47,8 @@ HEADERS = $(HEADERS_MAIN:main.h=)
 Dune:	$(OBJECTS) $(PT_OBJECTS)
 	$(LINK) -o $@ $^ $(LFLAGS)
 	
-	cp Dune /Users/orencio/bin/DuneSLC
+	cp Dune /mnt/c/Users/kiran/Documents/Research/Coastal\ dune\ model/RUN1D ##copy to directory of run
+##	cp Dune /Users/oduranvinent/bin/DuneSLC
 
 %.o:	%.cc
 	$(C++) -c $(CFLAGS) $(INCPATH) -o $@ $<
