@@ -67,7 +67,7 @@ protected:
     TFktVec m_flux_sat;
     TFktVec m_TempVec;
     
-    /*!  Typical grain diametre (in metres).  */
+    /*!  Typical grain diameter (in metres).  */
     double m_d_grain;
     /*!  Fluid viscosity, needed for computing the drag coefficient if not given.  */
     double m_fluid_viscosity;

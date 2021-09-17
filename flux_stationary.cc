@@ -89,15 +89,16 @@ double flux3d_stationary::u_star_at( double u_star )
     return u_t;//(u_t > 0 ? u_t : 0);
 }
 
-// void flux3d_stationary::waterlevel_factor( const double time )
-// {
-//     double period = 60*60*24*365. * m_wind_factor;  // convert to years
+// comment this if no time variation in wet dry threshold
+/*void flux3d_stationary::waterlevel_factor( const double time )
+{
+     double period = 60*60*24*365. * m_wind_factor;  // convert to years
     
-//     // growth step function
-//     double factor = (sin(2*M_PI * time / period) > 0 ? 1 : 0);
+     // growth step function
+     double factor = (sin(2*M_PI * time / period) > 0 ? 1 : 0);
      
-//     m_watertable = m_watertable0 + 0.3*factor;
-// }
+     m_watertable = m_watertable0 + 0.3*factor;
+}*/
 
 double flux3d_stationary::tau_t_factor( double h )
 {
