@@ -13,7 +13,7 @@ FFTW_LIB = /usr/local/lib
 TESTOPT =
 
 C++	= g++
-CFLAGS	= -ansi -std=c++11 -Wall -O3 -pedantic-errors -funroll-loops ${TESTOPT}
+CFLAGS	= -ansi -std=c++11 -Wall -mavx2 -Ofast -pedantic-errors -funroll-loops ${TESTOPT}
 INCPATH = -I. -I${FFTW_INC}
 MY_DEFS =-DPT_VERBOSITY=20 -DPT_SAFETY=1 -DPDE_3D 
 
@@ -47,9 +47,8 @@ HEADERS = $(HEADERS_MAIN:main.h=)
 Dune:	$(OBJECTS) $(PT_OBJECTS)
 	$(LINK) -o $@ $^ $(LFLAGS)
 	
-	cp Dune /mnt/c/Users/kiran/Documents/Research/Coastal\ dune\ model/RUN1D ##copy to directory of run
+	cp Dune /mnt/c/Users/kiran/Documents/Research/Coastal\ dune\ model/RUNDUNETOE ##copy to directory of run
 ##	cp Dune /Users/oduranvinent/bin/DuneSLC
-
 %.o:	%.cc
 	$(C++) -c $(CFLAGS) $(INCPATH) -o $@ $<
 
