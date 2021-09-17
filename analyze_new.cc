@@ -101,7 +101,7 @@ analyze::analyze(const dunepar& P)
 
 
 void analyze::Calc(int t, double time, double shift_dist_x, int m_shoreline, double m_shorelinechange, int m_veget_X0,
-	double qin, double qout, double m_ustar0, double surge, const TFktScal& m_h, const TFktScal& m_rhoveg)
+	double qin, double qout, double m_ustar0, double intensity, double time_step,const TFktScal& m_h,const TFktScal& m_hprev,const TFktScal& m_rhoveg)
 {
 	//m_dTime += timestep;
 
@@ -126,7 +126,9 @@ void analyze::Calc(int t, double time, double shift_dist_x, int m_shoreline, dou
 
 	const double dVol= m_h.Integrate(0);
 
-	// ----- max h ----
+    const double dVol_prev= m_hprev.Integrate(0);
+
+    // ----- max h ----
 	double hmax = 0, hmaxc = 0, hmaxd = 0;
 	int yc = 0;
 	double hmaxY = 0;
@@ -163,7 +165,10 @@ void analyze::Calc(int t, double time, double shift_dist_x, int m_shoreline, dou
 		<< dHMax-duneglobals::HMWL() << " "                				// 3: maximum height
 		<< RhoMax << " " 												// 4: maximum cover	
 		<< dVol << " "                 									// 5: volume / mass of sand
-		<< SR << " "	      											// 6: shoreline change (m)
+        << dVol_prev << " "                 							// 6: previous volume / mass of sand
+        << SR << " "	      											// 7: shoreline change (m)
+		<< intensity << " "                                             // 8: storm intensity (m)
+		// << time_step << " "                                             // 9: storm time step
 		<< endl;
 }
 
