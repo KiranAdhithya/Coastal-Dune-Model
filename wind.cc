@@ -57,6 +57,7 @@ wind_const::wind_const(const dunepar& par)
     else
         m_ustar= par.getrequired<double>( "u" );
     m_dir= par.getdefault( "constwind.direction", 0.0 ) / 360.0;
+    //m_dir = par.getrequired<double>( "constwind.dir" )/360.0;
 }
 
 //*****************************************************************************

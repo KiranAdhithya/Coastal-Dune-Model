@@ -598,7 +598,7 @@ void sepbub_transverse::Calc(TFktScal& h_sepbub, TFktScal& stall, const TFktScal
     // crest position, reattachment distance, brink pos, brink height & max heigth
     double xmax, l, xb, hb, Hmax;
     // Auxiliar const
-    double dhdxb, delta, Caux, factor;
+    double dhdxb; // delta, Caux, factor;
     
     // Detect flow separation
     TFktVec grad_h;

@@ -71,7 +71,7 @@ void shore3d::shorelinecal(const TFktScal& h)
 // correct shoreline geometry
 void shore3d::restoreshoreface(TFktScal& h)
 {
-    int x0 = m_shoreline-5;
+    int x0 = m_shoreline-10; // change 10 to be based on foreshore length
     for( int y= 0; y< duneglobals::ny(); ++y ){
         for( int x= x0; x < m_shoreline+1; ++x ){
             h(x, y) = h(x0, y) + m_slope*duneglobals::dx()*(x-x0);
@@ -107,7 +107,7 @@ int shore3d::shorefacemotion(TFktScal& h, double timestep)
     }
     // CORRECT SHORELINE
     
-    double shift = h(0,0)/m_slope;
+    // double shift = h(0,0)/m_slope;
         
     cout << h(0,0) << " " << m_shoreline << " " << m_slope << ' ' << mean_shoreshift << " # SHORE 1" << endl;
     

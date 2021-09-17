@@ -26,8 +26,8 @@ public:
     void CalcGradUp(TFktScal &h);
     void Step(TFktScal &h, TFktScal &overwash);
 
-    virtual double impact(double shoreline, TFktScal &h, TFktScal &h_nonerod, TFktScal &overwash );
-    virtual void stop( double time, double timestep, bool &calc_storm);
+    virtual double impact(double shoreline, TFktScal &h, TFktScal &h_nonerod, TFktScal &overwash, double* add_great2);
+    virtual void stop( double time, double timestep, bool &calc_storm, double* add_great, double* add_small);
 
     virtual void calc( TFktScal &h, TFktScal &overwash );
   
@@ -49,9 +49,16 @@ private:
     
     int m_shoreline;
     
-    double surge[3000];
+    double surge[5000000];
     int stormindex;
 
+    double poisson_param;
+    double inter_event_time;
+    double event_time;
+    double event_tstep;
+    double end_time;
+    double rand_n;
+    double event_tsteps[5000000];
 };
 
 

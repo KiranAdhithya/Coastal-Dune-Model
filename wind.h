@@ -186,9 +186,9 @@ private:
   /*!  Time intervals for the two wind regimes.  */
   double m_interval1, m_interval2;
   /*!  Wind speeds.  */
-  double m_dir1, m_dir2;
-  /*!  Wind directions.  */
   double m_ustar1, m_ustar2;
+  /*!  Wind directions.  */
+  double m_dir1, m_dir2;
   /*!  Current wind shear velocity.  */
   double m_ustar;
   /*!  Current wind direction.  */

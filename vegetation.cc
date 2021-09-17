@@ -107,7 +107,7 @@ void vegetation::getcover(TFktScal& rho_veget)
 /*!  Computes the evolution of the vegetation.  */
 int vegetation::evol(TFktScal& rho_veget, const double time, const double timestep, const double shoreline, const TFktScal& h, const TFktScal& dh_dt, TFktScal& overwash)
 {
-    int veget_X0 = 0, veget_X1 = 0;
+    int veget_X0 = 0; //veget_X1 = 0;
     
     // SPEC 1
     veget_X0 = evolspec(time, timestep, shoreline, h, dh_dt, overwash, 0);
@@ -153,7 +153,6 @@ int vegetation::evolspec(const double time, const double timestep, const double 
     int vegetpoints = 0;
     
     double m_shore_HMWL = duneglobals::HMWL();
-    
         
     for(int y = 0; y< duneglobals::ny(); ++y ){
         for(int x = 0; x< duneglobals::nx()-1; ++x ){
