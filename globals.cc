@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <math.h>
+#include <string.h>
 
 #include <sstream>
 #include <iomanip>
@@ -73,9 +74,9 @@ void dunepar::scan( int argc, char **argv )
                 cerr << "dunepar::scan: Name of parameter file given more than once"
                 " on the command line.  Ignoring `" << argv[argind] << "\n";
         }
-    
+    char Fdefault[] = "default.par";
     if( !fname )
-        fname= "default.par";
+        fname= Fdefault;
     
     if( !strcmp(fname, "-") )
     {
@@ -381,6 +382,9 @@ duneglobals::duneglobals( const dunepar& parameters )
     m_shore_watertable = parameters.getdefault("shore.sealevel", 0.0);
     m_beach_angle = parameters.getdefault("beach.angle", 1.0);
     m_beach_slope = tan(m_beach_angle * M_PI / 180.);
+
+    m_wind_angle = parameters.getdefault("wind.angle", 0.0);
+    m_wind_angle = tan(m_wind_angle * M_PI / 180.);
 
     /* Real Time / Sim Time */
     m_rtime = parameters.getdefault( "wind.fraction", 1.0);

@@ -166,6 +166,7 @@ public:
     static double MSL() { return instance->m_shore_watertable; }
     static double angle() { return instance->m_beach_angle; }
     static double slope() { return instance->m_beach_slope; }
+    static double wind_angle() { return instance->m_wind_angle; }
         
     static double C_drag(double Re);
     
@@ -234,6 +235,7 @@ private:
     double m_secday, m_secmonth, m_secyear;
     /*Shore param*/
     double m_shore_HMWL, m_shore_watertable, m_beach_angle, m_beach_slope;
+    double m_wind_angle;
     
     //  PARTELI BEGIN
     bool m_check_error, m_high_precision;
