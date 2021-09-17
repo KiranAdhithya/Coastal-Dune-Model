@@ -75,7 +75,7 @@ private:
 
 
 /*!  Puts a cube in the middle of the height profile.  This was created just
- for testing the array rotation.  The cube's heigth is given by the parameter
+ for testing the array rotation.  The cube's height is given by the parameter
  cube.height, and the fraction of the array to be taken up is given by
  cube.x_frac and cube.y_frac.  */
 
