@@ -179,7 +179,11 @@ void dune_evol_3d::save_arrays()
 double dune_evol_3d::step_implementation()
 {
     double newwind, angle, timestep, halfmeanLength = 0, m_ustar0, factor=0, event_intensity =0, event_timestep = 0, event_intensity2 =0, event_timestep2 = 0, storm_time;
-    
+
+    if(evolution::time() <1000) {
+        save_2d_scalarray("h", m_h);
+    }
+
     m_wind->advance( evolution::time() );
     newwind= m_wind->direction();
     m_ustar0 = m_wind->u_star();
@@ -223,10 +227,17 @@ double dune_evol_3d::step_implementation()
         m_shift_dist_x = shiftback(0);
     }
 
+    const double dVol_prev = m_h.Integrate(0);
 
     /*STORMS*/
 
-    storm_time = 30000000.0; //42290000.0; // time to wait for storms to initialize (10*T_d for dune to reach H_max, 0 if start with no dunes)
+    // storm start time must be based on collapse condition, start when no dune is present
+    // first storm time must not be 0(check this)
+    storm_time = 100000.0; // time to wait for storms to initialize (10*T_d for dune to reach H_max, 0 if start with no dunes)
+
+    if(evolution::time() == storm_time) {
+        save_2d_scalarray("h", m_h);
+    }
 
     if (evolution::time() > storm_time) {
         if (m_calc_storm0) {
@@ -245,7 +256,10 @@ double dune_evol_3d::step_implementation()
             m_storm->stop(evolution::time(), timestep, m_calc_storm, &event_intensity, &event_timestep);
         }
 
-        // SHIFT AND SHORE
+        // required for shore restore post storm
+
+        /*
+         // SHIFT AND SHORE
         if (m_calc_shore) {
             // Shoreline calculation
             // Shore motion
@@ -257,7 +271,10 @@ double dune_evol_3d::step_implementation()
         } else {
             m_shift_dist_x = shiftback(0);
         }
+        */
     }
+
+    const double dVol = m_h.Integrate(0);
 
     // VEGETATION
     int m_veget_X0;
@@ -270,14 +287,16 @@ double dune_evol_3d::step_implementation()
 
         // Rescaling
         m_flux.rescale(m_Satflux_upwind);
+        //const double dVol= m_h.Integrate(0);
+        //const double dVol_prev= m_hprev.Integrate(0);
 
         int steps = evolution::time() / timestep;
         int process = (steps % 50 == 0 ? 1 : 0);
         //if (process || m_surge > 0){
-        if(process || (event_timestep2!=0)){
+        if(process || (event_timestep2!=0) ){
             // // Rescaling
             // m_flux.rescale(m_Satflux_upwind);
-            m_analyze->Calc(steps, evolution::time(), m_shift_dist_x*duneglobals::dx(), m_shoreline, m_shorelinechange, m_veget_X0, m_qin/m_Satflux_upwind/duneglobals::ny(), m_qout/m_Satflux_upwind/duneglobals::ny(), m_ustar0, event_intensity2,event_timestep2, m_h, m_hprev, m_rho_veget);
+            m_analyze->Calc(steps, evolution::time(), m_shift_dist_x*duneglobals::dx(), m_shoreline, m_shorelinechange, m_veget_X0, m_qin/m_Satflux_upwind/duneglobals::ny(), m_qout/m_Satflux_upwind/duneglobals::ny(), m_ustar0, event_intensity2,event_timestep2, m_h, dVol,dVol_prev, m_rho_veget);
             // prevent saving storms many times
         }
     }

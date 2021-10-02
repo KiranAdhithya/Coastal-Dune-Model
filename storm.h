@@ -49,7 +49,7 @@ private:
     
     int m_shoreline;
     
-    double surge[5000000];
+    double surge[1];
     int stormindex;
 
     double poisson_param;
@@ -58,7 +58,7 @@ private:
     double event_tstep;
     double end_time;
     double rand_n;
-    double event_tsteps[5000000];
+    double event_tsteps[1];
 };
 
 

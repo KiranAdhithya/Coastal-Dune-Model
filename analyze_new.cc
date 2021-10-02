@@ -1,6 +1,7 @@
 #include <string>
 
 #include "analyze_new.h"
+#include "globals.h"
 
 using std::string;
 
@@ -101,7 +102,7 @@ analyze::analyze(const dunepar& P)
 
 
 void analyze::Calc(int t, double time, double shift_dist_x, int m_shoreline, double m_shorelinechange, int m_veget_X0,
-	double qin, double qout, double m_ustar0, double intensity, double time_step,const TFktScal& m_h,const TFktScal& m_hprev,const TFktScal& m_rhoveg)
+	double qin, double qout, double m_ustar0, double intensity, double time_step,const TFktScal& m_h,const double dVol, const double dVol_prev,const TFktScal& m_rhoveg)
 {
 	//m_dTime += timestep;
 
@@ -124,9 +125,8 @@ void analyze::Calc(int t, double time, double shift_dist_x, int m_shoreline, dou
 
 	// ---- volume / mass ----
 
-	const double dVol= m_h.Integrate(0);
-
-    const double dVol_prev= m_hprev.Integrate(0);
+	//const double dVol= m_h.Integrate(0);
+    //const double dVol_prev= m_hprev.Integrate(0);
 
     // ----- max h ----
 	double hmax = 0, hmaxc = 0, hmaxd = 0;
