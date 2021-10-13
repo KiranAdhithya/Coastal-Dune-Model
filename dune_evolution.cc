@@ -146,13 +146,40 @@ void dune_evol_3d::init(const dunepar& par){
     
     init_h->init_2d_scal( m_h_nonerod );
     delete init_h;
-    for( int x= 0; x< duneglobals::nx(); ++x )
+
+     for( int x= 0; x< duneglobals::nx(); ++x )
         for( int y= 0; y< duneglobals::ny(); ++y )
             if( m_h(x, y) < m_h_nonerod(x, y) )
                 m_h(x, y)= m_h_nonerod(x, y);
 
-    m_h0 = m_h; // store initial profile
-    
+     m_h0 = m_h; // store initial profile
+
+     /*
+     double m_beach= 0.3; // value of "beach.h" in par file//par.getdefault<double>( prefix+"beach.h", duneglobals::dx());
+    double m_slope= duneglobals::slope(); //par.getdefault<double>( prefix+"beach.angle", 45);
+    double m_l;
+
+    if (m_slope > 0) {
+        m_l = m_beach/(duneglobals::dx()*m_slope);
+    }
+
+    int x, y;
+
+    for( x= 0; x< duneglobals::nx(); ++x ) {
+        for (y = 0; y < duneglobals::ny(); ++y) {
+            if (x < m_l) {
+                m_h_nonerod(x, y) = m_beach / m_l * x;
+            } else {
+                m_h_nonerod(x, y) = m_beach;
+            }
+        }
+    }
+
+    // change ends here
+
+    m_h0 = m_h_nonerod; // store initial profile
+
+      */
 }
 
 /*!  Saves the two-dimensional arrays m_h, m_tau and m_flux.  The difference
@@ -178,10 +205,18 @@ void dune_evol_3d::save_arrays()
 
 double dune_evol_3d::step_implementation()
 {
-    double newwind, angle, timestep, halfmeanLength = 0, m_ustar0, factor=0, event_intensity =0, event_timestep = 0, event_intensity2 =0, event_timestep2 = 0, storm_time;
+    double newwind, angle, timestep, halfmeanLength = 0, m_ustar0, factor=0, event_intensity =0, event_timestep = 0, event_intensity2 =0, event_timestep2 = 0, storm_time,time_Recovery=0.0;
 
     if(evolution::time() <1000) {
         save_2d_scalarray("h", m_h);
+        save_2d_scalarray("h0_", m_h0);
+    }
+
+    const double dHMax = m_h.GetMax();
+    const double VolMax= m_h.Integrate(0);
+    if(dHMax == 3.9504 && VolMax == 256.864){ // dune profile is fully restored
+        m_h = m_h0;
+        time_Recovery = evolution::time();
     }
 
     m_wind->advance( evolution::time() );
@@ -233,7 +268,7 @@ double dune_evol_3d::step_implementation()
 
     // storm start time must be based on collapse condition, start when no dune is present
     // first storm time must not be 0(check this)
-    storm_time = 100000.0; // time to wait for storms to initialize (10*T_d for dune to reach H_max, 0 if start with no dunes)
+    storm_time = 1000000.0; // time to wait for storms to initialize (10*T_d for dune to reach H_max, 0 if start with no dunes)
 
     if(evolution::time() == storm_time) {
         save_2d_scalarray("h", m_h);
@@ -296,7 +331,7 @@ double dune_evol_3d::step_implementation()
         if(process || (event_timestep2!=0) ){
             // // Rescaling
             // m_flux.rescale(m_Satflux_upwind);
-            m_analyze->Calc(steps, evolution::time(), m_shift_dist_x*duneglobals::dx(), m_shoreline, m_shorelinechange, m_veget_X0, m_qin/m_Satflux_upwind/duneglobals::ny(), m_qout/m_Satflux_upwind/duneglobals::ny(), m_ustar0, event_intensity2,event_timestep2, m_h, dVol,dVol_prev, m_rho_veget);
+            m_analyze->Calc(steps, evolution::time(), m_shift_dist_x*duneglobals::dx(), m_shoreline, m_shorelinechange, m_veget_X0, m_qin/m_Satflux_upwind/duneglobals::ny(), m_qout/m_Satflux_upwind/duneglobals::ny(), m_ustar0, event_intensity2,event_timestep2, m_h, dVol,dVol_prev, time_Recovery,m_rho_veget);
             // prevent saving storms many times
         }
     }

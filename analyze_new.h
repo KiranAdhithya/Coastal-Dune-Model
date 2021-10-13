@@ -12,7 +12,7 @@ public:
   analyze(const dunepar& P);
 
   void Calc(int t, double timestep, double shift_dist_x, int m_shoreline, double m_shorelinechange, int m_veget_X0,
-  	double qin, double qout, double meanFlux, double meanVegetRho, double event, const TFktScal& h, const double dVol, const double dVol_prev,const TFktScal& m_rhoveg);
+  	double qin, double qout, double meanFlux, double meanVegetRho, double event, const TFktScal& h, const double dVol, const double dVol_prev,double t_R,const TFktScal& m_rhoveg);
 
   double Center() { return m_dCenter; }
 

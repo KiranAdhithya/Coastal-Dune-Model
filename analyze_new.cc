@@ -102,7 +102,7 @@ analyze::analyze(const dunepar& P)
 
 
 void analyze::Calc(int t, double time, double shift_dist_x, int m_shoreline, double m_shorelinechange, int m_veget_X0,
-	double qin, double qout, double m_ustar0, double intensity, double time_step,const TFktScal& m_h,const double dVol, const double dVol_prev,const TFktScal& m_rhoveg)
+	double qin, double qout, double m_ustar0, double intensity, double time_step,const TFktScal& m_h,const double dVol, const double dVol_prev,double t_R,const TFktScal& m_rhoveg)
 {
 	//m_dTime += timestep;
 
@@ -168,6 +168,7 @@ void analyze::Calc(int t, double time, double shift_dist_x, int m_shoreline, dou
         << dVol_prev << " "                 							// 6: previous volume / mass of sand
         << SR << " "	      											// 7: shoreline change (m)
 		<< intensity << " "                                             // 8: storm intensity (m)
+		<< t_R/duneglobals::secyear()/duneglobals::timefrac() << " "    // 9: recovery time (years)
 		// << time_step << " "                                             // 9: storm time step
 		<< endl;
 }
