@@ -19,7 +19,7 @@ public:
     // construction
     vegetation(const dunepar& par);
     virtual ~vegetation() {}
-        
+
     //  Functions reimplemented from coast:
     virtual void init(const dunepar& par);
     virtual int evol(TFktScal& rho_veget, const double time, const double timestep, const double shoreline, const TFktScal& h, const TFktScal& dhdt, TFktScal& overwash);
@@ -30,7 +30,7 @@ public:
     virtual void save_arrays();
 
 private:
-    
+
     virtual int evolspec(const double time, const double timestep, const double shoreline, const TFktScal& h, const TFktScal& dhdt, TFktScal& overwash, int species);
 
     /* auxiliary function for vegetation */
@@ -42,7 +42,7 @@ private:
     double m_Lveg; // vegetation limit = m_xmin * dx
     double m_zmin; // veget minimum height above sealevel
     double m_veget_init0, m_veget_init1;
-    double m_Tveg, m_rho_max, m_rho_min, m_Hveg, m_sens, m_veg_season, m_wind_factor, m_Vlateral_factor, m_angle_ref;
+    double m_Tveg, m_rho_max, m_rho_min, rand_n, m_prob_min,m_rho_c, m_Hveg, m_sens, m_veg_season, m_wind_factor, m_Vlateral_factor, m_angle_ref;
     bool m_spec1, m_spec2, m_lateral;
     bool m_survive;
 
@@ -50,4 +50,3 @@ private:
 
 
 #endif //  VEGETATION_H
-

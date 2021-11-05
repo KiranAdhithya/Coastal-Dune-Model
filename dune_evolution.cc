@@ -73,7 +73,7 @@ dune_evol_3d::dune_evol_3d(const dunepar& par) : evolution(par)
     m_shoremotion = par.getdefault("shore.motion", 1.0);
     
     /* Storm parameters */
-    m_calc_storm0 = par.getdefault("calc.storm", true);
+    m_calc_storm0 = par.getdefault("calc.storm", false);
     m_calc_storm = m_calc_storm0;   // temporal storm variable
 
     /*Functions creation*/
@@ -91,18 +91,18 @@ dune_evol_3d::dune_evol_3d(const dunepar& par) : evolution(par)
 
     m_overwash.Create( duneglobals::nx(), duneglobals::ny(), duneglobals::dx(), 0.0);
 
+    /* Auxiliar */
+    m_Satflux_upwind = (m_wind->u_star()==0? 0 : m_calcflux->Satflux_upwind(m_wind->u_star()));
+    cout << "!!!Flux0 = " << m_Satflux_upwind/duneglobals::rho_sand()*duneglobals::secyear() << ", " << m_Satflux_upwind << endl;
+
+    double SatLength_upwind = (m_wind->u_star()==0? 0 : m_calcflux->SatLength_upwind(m_wind->u_star()));
+    cout << "!!!ls = " << SatLength_upwind << endl;
+
     /* Surface initialization*/
     init(par);
     m_grass->init(par);
     m_grass->getcover(m_rho_veget);
 
-    /* Auxiliar */
-    m_Satflux_upwind = (m_wind->u_star()==0? 0 : m_calcflux->Satflux_upwind(m_wind->u_star()));
-    cout << "!!!Flux0 = " << m_Satflux_upwind/duneglobals::rho_sand()*duneglobals::secyear() << ", " << m_Satflux_upwind << endl;
-    
-    double SatLength_upwind = (m_wind->u_star()==0? 0 : m_calcflux->SatLength_upwind(m_wind->u_star()));
-    cout << "!!!ls = " << SatLength_upwind << endl;
-    
     if (m_calc_shore) {
         /* Shoreline calculation*/
         m_shore->shorelinecal( m_h );
@@ -154,32 +154,6 @@ void dune_evol_3d::init(const dunepar& par){
 
      m_h0 = m_h; // store initial profile
 
-     /*
-     double m_beach= 0.3; // value of "beach.h" in par file//par.getdefault<double>( prefix+"beach.h", duneglobals::dx());
-    double m_slope= duneglobals::slope(); //par.getdefault<double>( prefix+"beach.angle", 45);
-    double m_l;
-
-    if (m_slope > 0) {
-        m_l = m_beach/(duneglobals::dx()*m_slope);
-    }
-
-    int x, y;
-
-    for( x= 0; x< duneglobals::nx(); ++x ) {
-        for (y = 0; y < duneglobals::ny(); ++y) {
-            if (x < m_l) {
-                m_h_nonerod(x, y) = m_beach / m_l * x;
-            } else {
-                m_h_nonerod(x, y) = m_beach;
-            }
-        }
-    }
-
-    // change ends here
-
-    m_h0 = m_h_nonerod; // store initial profile
-
-      */
 }
 
 /*!  Saves the two-dimensional arrays m_h, m_tau and m_flux.  The difference
@@ -212,12 +186,12 @@ double dune_evol_3d::step_implementation()
         save_2d_scalarray("h0_", m_h0);
     }
 
-    const double dHMax = m_h.GetMax();
+    /*const double dHMax = m_h.GetMax();
     const double VolMax= m_h.Integrate(0);
     if(dHMax == 3.9504 && VolMax == 256.864){ // dune profile is fully restored
         m_h = m_h0;
         time_Recovery = evolution::time();
-    }
+    }*/
 
     m_wind->advance( evolution::time() );
     newwind= m_wind->direction();
@@ -267,12 +241,11 @@ double dune_evol_3d::step_implementation()
     /*STORMS*/
 
     // storm start time must be based on collapse condition, start when no dune is present
-    // first storm time must not be 0(check this)
-    storm_time = 1000000.0; // time to wait for storms to initialize (10*T_d for dune to reach H_max, 0 if start with no dunes)
+    storm_time = 0.0; // 1000000.0; // time to wait for storms to initialize (10*T_d for dune to reach H_max, 0 if start with no dunes)
 
-    if(evolution::time() == storm_time) {
+    /*if(evolution::time() == storm_time) {
         save_2d_scalarray("h", m_h);
-    }
+    }*/
 
     if (evolution::time() > storm_time) {
         if (m_calc_storm0) {
@@ -316,7 +289,7 @@ double dune_evol_3d::step_implementation()
     if (m_calc_veget) {
         m_veget_X0 = m_grass->evol(m_rho_veget, evolution::time(), timestep, m_shoreline, m_h, m_dh_dt, m_overwash);
     }
-    
+
     // PROCESS DATA
     if(m_calc_analyze){
 

@@ -42,6 +42,7 @@ private:
     TFktScal m_hst;
     
     int m_storm_iter;
+
     double m_Smax;
     double m_Sdt;
     double m_Q, m_scalefactor, m_shore_HMWL, m_watertable, m_surge, m_Tsurge;
@@ -49,16 +50,20 @@ private:
     
     int m_shoreline;
     
-    double surge[10000000];
+    double surge[1000];
     int stormindex;
+    int m_overwash;
+    int m_seed;
 
+    double m_frequency;
+    double m_intensity;
     double poisson_param;
     double inter_event_time;
     double event_time;
     double event_tstep;
     double end_time;
     double rand_n;
-    double event_tsteps[10000000];
+    double event_times[1000];
 };
 
 
