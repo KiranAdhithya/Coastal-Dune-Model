@@ -75,6 +75,7 @@ dune_evol_3d::dune_evol_3d(const dunepar& par) : evolution(par)
     /* Storm parameters */
     m_calc_storm0 = par.getdefault("calc.storm", false);
     m_calc_storm = m_calc_storm0;   // temporal storm variable
+    m_storm_start = par.getdefault("storm.startTime",0.0);
 
     /*Functions creation*/
     m_h.Create( duneglobals::nx(), duneglobals::ny(), duneglobals::dx(), 0.0);
@@ -114,6 +115,13 @@ dune_evol_3d::dune_evol_3d(const dunepar& par) : evolution(par)
     /* init shoreline change in m */
     m_shorelinechange = 0;
     cout << "!!! shoreline = " << m_shoreline*duneglobals::dx() << endl;
+
+    /* Dune max erosion */
+    m_DuneMax = 0.0;
+    m_DuneMaxTimeFactor = par.getdefault("storm.DuneMaxTimeFactor", 50000);
+    //m_DuneVolMax = 0.0;
+    m_DuneMaxTime = 0.0;
+
 }
 
 
@@ -186,12 +194,22 @@ double dune_evol_3d::step_implementation()
         save_2d_scalarray("h0_", m_h0);
     }
 
-    /*const double dHMax = m_h.GetMax();
-    const double VolMax= m_h.Integrate(0);
-    if(dHMax == 3.9504 && VolMax == 256.864){ // dune profile is fully restored
+    const double dHMax = m_h.GetMax();
+    // const double VolMax= m_h.Integrate(0);
+    if(dHMax == m_DuneMax){
+        m_DuneMaxTime = m_DuneMaxTime + m_dtmax;
+    }else if(dHMax > m_DuneMax){
+        m_DuneMax = dHMax;
+    }
+
+    // dune profile is fully restored
+    if(m_DuneMaxTime >= (m_dtmax*m_DuneMaxTimeFactor) && m_calc_storm0){
         m_h = m_h0;
         time_Recovery = evolution::time();
-    }*/
+        m_overwash.SetAll(1.0);
+        m_DuneMaxTime = 0.0;
+        m_DuneMax = 0.0;
+    }
 
     m_wind->advance( evolution::time() );
     newwind= m_wind->direction();
@@ -241,7 +259,7 @@ double dune_evol_3d::step_implementation()
     /*STORMS*/
 
     // storm start time must be based on collapse condition, start when no dune is present
-    storm_time = 0.0; // 1000000.0; // time to wait for storms to initialize (10*T_d for dune to reach H_max, 0 if start with no dunes)
+    storm_time = m_storm_start*1000.0; // 1000000.0; // time to wait for storms to initialize (10*T_d for dune to reach H_max, 0 if start with no dunes)
 
     /*if(evolution::time() == storm_time) {
         save_2d_scalarray("h", m_h);
@@ -301,7 +319,7 @@ double dune_evol_3d::step_implementation()
         int steps = evolution::time() / timestep;
         int process = (steps % 50 == 0 ? 1 : 0);
         //if (process || m_surge > 0){
-        if(process || (event_timestep2!=0) ){
+        if(process || (event_timestep2!=0) || (time_Recovery!=0)){
             // // Rescaling
             // m_flux.rescale(m_Satflux_upwind);
             m_analyze->Calc(steps, evolution::time(), m_shift_dist_x*duneglobals::dx(), m_shoreline, m_shorelinechange, m_veget_X0, m_qin/m_Satflux_upwind/duneglobals::ny(), m_qout/m_Satflux_upwind/duneglobals::ny(), m_ustar0, event_intensity2,event_timestep2, m_h, dVol,dVol_prev, time_Recovery,m_rho_veget);

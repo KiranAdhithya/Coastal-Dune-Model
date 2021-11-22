@@ -41,7 +41,8 @@ storm::storm(const dunepar& p) : dunedata(p)
     m_slope = duneglobals::slope(); //p.getdefault("beach.slope0", 0.5);
 
     m_Smax = p.getdefault("storm.Smax", 10000.0);
-    
+    m_storm_start = p.getdefault("storm.startTime",0.0);
+
     /*
     // Frequency
     double m_freq = p.getdefault("storm.freq", 18.0);
@@ -57,7 +58,8 @@ storm::storm(const dunepar& p) : dunedata(p)
 
     poisson_param = m_frequency; // frequency in events/year
     inter_event_time = 0.0;
-    event_time = 0.0; //42290000.0/duneglobals::secyear()/duneglobals::timefrac();  // change to make it storm time to start HWE after dune growth (in years)
+    // change to make it storm time to start HWE after dune growth (in years)
+    event_time = m_storm_start*1000.0/duneglobals::secyear()/duneglobals::timefrac(); //5000000.0/duneglobals::secyear()/duneglobals::timefrac();
     rand_n = 0.0;
     //event_tstep = 0.0;
     //end_time = 0.0;
@@ -67,7 +69,7 @@ storm::storm(const dunepar& p) : dunedata(p)
     std::default_random_engine generator (seed);
     std::uniform_real_distribution<double> distribution(0.0926,1.0); //0.0926 to get minimum of 2 days
 
-    for(int i = 0; i< 1000;i++){
+    for(int i = 0; i< 5000;i++){
 
         rand_n = distribution(generator);
         inter_event_time = -log(1.0 - rand_n) / poisson_param;
@@ -91,7 +93,7 @@ storm::storm(const dunepar& p) : dunedata(p)
     //double scalefactor0 = 0.4;
     //std::gamma_distribution<double> distribution2(shape,scalefactor0);
 
-    for(int i = 0; i < 1000; i++) {
+    for(int i = 0; i < 5000; i++) {
         surge[i] = distribution2(generator2);
     }
 

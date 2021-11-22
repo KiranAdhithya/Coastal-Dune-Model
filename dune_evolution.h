@@ -113,7 +113,7 @@ protected:
     bool m_shoremotion, m_calc_shore;
     
     bool m_calc_storm0, m_calc_storm;
-    double m_surge;
+    double m_surge,m_storm_start;
     
     /*!  Dune height profile.  */
     TFktScal m_h;
@@ -142,6 +142,10 @@ protected:
     double m_shift_dist_x, m_shift_dist_y;
     double m_wind_factor;
     double m_Satflux_upwind, m_maxchange, m_qin, m_qout;
+
+    /*! Variables for erosion of mature dune in the absence of overtopping events for long time*/
+    double m_DuneMax,m_DuneVolMax,m_DuneMaxTime,m_DuneMaxTimeFactor;
+
 };
 
 #endif // DUNE_EVOLUTION_H

@@ -80,10 +80,11 @@ void vegetation::init(const dunepar& par) {
 
     delete init_veget;
 
+/* // For raandom seeding of vegetation
     std::default_random_engine generator;
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
 
-    for (int x = 0; x < duneglobals::nx(); ++x){
+   for (int x = 0; x < duneglobals::nx(); ++x){
         for (int y = 0; y < duneglobals::ny(); ++y) {
             rand_n = distribution(generator);
             //if (rand_n > m_prob_min) {
@@ -95,7 +96,7 @@ void vegetation::init(const dunepar& par) {
                 m_veget(x, y)[1] = 0.0;
             }
         }
-    }
+    }*/
 }
 
 /*! return cover fraction*/
@@ -166,8 +167,8 @@ int vegetation::evolspec(const double time, const double timestep, const double 
 
     double m_shore_HMWL = duneglobals::HMWL();
 
-    std::default_random_engine generator;
-    std::uniform_real_distribution<double> distribution(0.0,1.0);
+    //std::default_random_engine generator;
+    //std::uniform_real_distribution<double> distribution(0.0,1.0);
 
     for(int y = 0; y< duneglobals::ny(); ++y ){
         for(int x = 0; x< duneglobals::nx()-1; ++x ){
@@ -222,22 +223,17 @@ int vegetation::evolspec(const double time, const double timestep, const double 
 
             // initial condition
             if (m_veget(x,y)[species] == 0 && shorefactor * dhdxfactor * watertable > 0 && dhdt >= 0){
-                //m_veget(x,y)[species] = (m_veg_type == 0 ? m_veget_init0 : m_veget_init1);
+                m_veget(x,y)[species] = (m_veg_type == 0 ? m_veget_init0 : m_veget_init1);
 
-                // a random probability and if p>p0, veget = rho_c
+                /*// a random probability and if p>p0, veget = rho_c
                 rand_n = distribution(generator);
                 // if(rand_n>m_prob_min){
                 if(double(rand()%100)/100.0 >= m_prob_min){
                     m_veget(x,y)[species] = m_rho_c;
-                }
+                }*/
             }
         }
     }
-
-
-    // either array or maximum prop rate at each timestep
-    // save_2d_vecarray( "prop", prop_rate_array );
-    // save_2d_vecarray( "reprod", reprod_rate_array );
 
     return m_xmin;
 }

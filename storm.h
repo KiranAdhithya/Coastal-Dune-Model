@@ -47,10 +47,11 @@ private:
     double m_Sdt;
     double m_Q, m_scalefactor, m_shore_HMWL, m_watertable, m_surge, m_Tsurge;
     double m_slope;
+    double m_storm_start;
     
     int m_shoreline;
     
-    double surge[1000];
+    double surge[5000];
     int stormindex;
     int m_overwash;
     int m_seed;
@@ -63,7 +64,7 @@ private:
     double event_tstep;
     double end_time;
     double rand_n;
-    double event_times[1000];
+    double event_times[5000];
 };
 
 
