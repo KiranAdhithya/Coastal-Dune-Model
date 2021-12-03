@@ -19,17 +19,18 @@ void CInitSurfBeach::init_2d_scal(TFktScal& array)
 {
     int x, y;
 
-    for( x= 0; x< duneglobals::nx(); ++x )
-        for( y= 0; y< duneglobals::ny(); ++y ){
+    for( x= 0; x< duneglobals::nx(); ++x ) {
+        for (y = 0; y < duneglobals::ny(); ++y) {
             if (x < m_l) {
 //                double a = 0*(x-0.5*m_l)*duneglobals::dx()/3.;
-                array(x, y) =  m_h / m_l * x; // + 0.2*exp(-a*a); // m_h * (1 - (1-x*1.0/m_l)*(1-x*1.0/m_l));
+                array(x, y) = m_h / m_l * x; // + 0.2*exp(-a*a); // m_h * (1 - (1-x*1.0/m_l)*(1-x*1.0/m_l));
             } else {
                 array(x, y) = m_h;
             }
             //           double a = (x-0.5*m_l)*duneglobals::dx()/3.;
             //           array(x, y) = m_h * (1 - exp(- x /m_l)) + 0.2*exp(-a*a);
         }
+    }
 }
 
 /* test for oblique wind on rotated profile

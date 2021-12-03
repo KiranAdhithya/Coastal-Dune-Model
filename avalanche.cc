@@ -117,14 +117,15 @@ double flowaval::CalcGradDown(){
                     m_grad_h_down(x, y)[0] = (*m_h)(x, y) - (*m_h)(0,y);
             }else if(x==duneglobals::nx()-1 && (*m_h)(x,y) < (*m_h)(x-1,y)){
                 m_grad_h_down(x, y)[0] = -((*m_h)(x, y) - (*m_h)(x-1,y));
-            }else if(x > 0 && x < duneglobals::nx()-1)
-                if((*m_h)(x,y) < (*m_h)(x+1,y) && (*m_h)(x,y) < (*m_h)(x-1,y))
-                    m_grad_h_down(x,y)[0] = 0;
-                else if( (*m_h)(x+1,y) > (*m_h)(x-1,y) )
-                    m_grad_h_down(x, y)[0] = -((*m_h)(x, y) - (*m_h)(x-1,y));
+            }else if(x > 0 && x < duneglobals::nx()-1) {
+                if ((*m_h)(x, y) < (*m_h)(x + 1, y) && (*m_h)(x, y) < (*m_h)(x - 1, y))
+                    m_grad_h_down(x, y)[0] = 0;
+                else if ((*m_h)(x + 1, y) > (*m_h)(x - 1, y))
+                    m_grad_h_down(x, y)[0] = -((*m_h)(x, y) - (*m_h)(x - 1, y));
                 else
-                    m_grad_h_down(x, y)[0] = (*m_h)(x, y) - (*m_h)(x+1,y);
-            
+                    m_grad_h_down(x, y)[0] = (*m_h)(x, y) - (*m_h)(x + 1, y);
+            }
+
             prevy = (y==0)?(duneglobals::ny()-1):(y-1);
             nexty = (y==duneglobals::ny()-1)?0:(y+1);
             
@@ -135,8 +136,6 @@ double flowaval::CalcGradDown(){
                 m_grad_h_down(x,y)[1] = -((*m_h)(x, y) - (*m_h)(x,prevy));
             else
                 m_grad_h_down(x,y)[1] = (*m_h)(x, y) - (*m_h)(x,nexty);
-            
-            
             
             m_grad_h_down(x,y)[0]/= duneglobals::dx();
             m_grad_h_down(x,y)[1]/= duneglobals::dx();
