@@ -75,6 +75,7 @@ storm::storm(const dunepar& p) : dunedata(p)
         inter_event_time = -log(1.0 - rand_n) / poisson_param;
         event_time = event_time + inter_event_time; //  adding two days as minimum inter-arrival time
         event_times[i] = event_time*365*24*60*60; //time in seconds
+
         //event_tstep = event_time*365*24*60*60/1000;
         //event_tstep = std::round(event_tstep);
     }
@@ -89,7 +90,7 @@ storm::storm(const dunepar& p) : dunedata(p)
     std::default_random_engine generator2 (seed2);
     std::exponential_distribution<double> distribution2(intensity);
 
-    //int shape = 3;
+    //int shape = 3; // for gamma/Rayleigh distributed intensity
     //double scalefactor0 = 0.4;
     //std::gamma_distribution<double> distribution2(shape,scalefactor0);
 
@@ -174,7 +175,6 @@ void storm::stop( double time, double timestep, bool &calc_storm, double* add_gr
         calc_storm = (tnextstorm == 0 && tstep >= 0 ? 1 : 0);
 */
 
-
 /*       // for single fixed storm
         double Sstep = 120000;
         calc_storm = (((int) tstep % (int) Sstep == 0) && tstep >= 0 ? 1 : 0);
@@ -184,7 +184,6 @@ void storm::stop( double time, double timestep, bool &calc_storm, double* add_gr
             // cout << "!! STORM = " << stormindex << ' '  << tstep << " storm time step \n" << endl;
 
             //        cout << "!! STORM = " << calc_storm << ' ' << tstep << ' ' << stormindex << ' ' << tnextstorm << endl; // for cyclic storms
-
         }
         
     }
@@ -203,7 +202,6 @@ void storm::Step(TFktScal &h, TFktScal &overwash)
     //double hnext, hi, hprev, Sfactor, hx, hxx, divq,q,dx = duneglobals::dx();
     double hi;
     int max_x,x;
-
 
     for (int y=0; y < duneglobals::ny(); y++) {
         bool cont = true;

@@ -102,17 +102,32 @@ analyze::analyze(const dunepar& P)
 
 
 void analyze::Calc(int t, double time, double shift_dist_x, int m_shoreline, double m_shorelinechange, int m_veget_X0,
-	double qin, double qout, double m_ustar0, double intensity, double time_step,const TFktScal& m_h,const double dVol, const double dVol_prev,double t_R,const TFktScal& m_rhoveg)
-{
-	//m_dTime += timestep;
+	double qin, double qout, double m_ustar0, double intensity, double time_step,const TFktScal& m_h,const double dVol, const double dVol_prev,double t_R,const TFktScal& m_rhoveg) {
+    //m_dTime += timestep;
 
-	// calc dune properties
-	const double dHMax = m_h.GetMax();
-	const double RhoMax = m_rhoveg.GetMax();
-    
-    double H1X1 = m_h.GetFirstMax();
-    double X1 = floor(H1X1/10000);
-    double H1 = H1X1 - X1*10000;
+    // calc dune properties
+    const double dHMax = m_h.GetMax();
+    const double RhoMax = m_rhoveg.GetMax();
+
+    // extract location of max wrt shoreline
+
+    int PosMax = 0;
+    if (m_h.SizeY() < 16){
+        double dMax = 0.0;
+        for (int x = 0; x < m_h.SizeX(); x++) {
+            if (m_h(x, 1) > dMax) {
+                dMax = m_h(x, 1);
+                PosMax = x;
+            }
+        }
+        PosMax = PosMax - m_shoreline;
+    }
+
+   //    PosMax = (PosMax < 0 ? 0 : PosMax);
+
+    // double H1X1 = m_h.GetFirstMax();
+    // double X1 = floor(H1X1/10000);
+    // double H1 = H1X1 - X1*10000;
 
     double H0 = 0;
     double veget0 = 0;
@@ -154,7 +169,7 @@ void analyze::Calc(int t, double time, double shift_dist_x, int m_shoreline, dou
 	hmaxd /= m_h.SizeY()-yc;
     
     // --- TIME ----
-    double realtime = time/duneglobals::secyear()/duneglobals::timefrac(); // years
+    // double realtime = time/duneglobals::secyear()/duneglobals::timefrac(); // years
     // --- Shoreline rate of change ---
     double SR = m_shorelinechange; // / realtime;
 
@@ -169,6 +184,7 @@ void analyze::Calc(int t, double time, double shift_dist_x, int m_shoreline, dou
         << SR << " "	      											// 7: shoreline change (m)
 		<< intensity << " "                                             // 8: storm intensity (m)
 		<< t_R/duneglobals::secyear()/duneglobals::timefrac() << " "    // 9: recovery time (years)
+		<< PosMax*duneglobals::dx()                           << " "    // 10: Distance between crest and shoreline (m)
 		// << time_step << " "                                             // 9: storm time step
 		<< endl;
 }
